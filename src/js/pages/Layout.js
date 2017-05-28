@@ -1,9 +1,13 @@
 import React from "react";
+import { Link } from 'react-router'
 
 export default class Layout extends React.Component {
   render() {
     return (
-      <h1>KillerNews.net</h1>
+      <div>
+        <h1>Layout</h1>
+        <Link to="archives">archives</Link>
+      </div>
     );
   }
 }
