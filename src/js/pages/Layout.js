@@ -5,10 +5,11 @@ export default class Layout extends React.Component {
   navigate() {
     console.log(this.props.route.path)
     this.props.history.pushState(null, "/")
-    console.log(this)
   }
 
   render() {
+    const {history} = this.props
+    console.log(history.isActive("archives"))
     return (
       <div>
         <h1>Layout</h1>
