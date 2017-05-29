@@ -1,22 +1,37 @@
 import React from "react";
 import { Link } from 'react-router'
 
-export default class Layout extends React.Component {
-  navigate() {
-    console.log(this.props.route.path)
-    this.props.history.pushState(null, "/")
-  }
+import Nav from '../components/layout/Nav'
+import Footer from '../components/layout/Footer'
 
+export default class Layout extends React.Component {
   render() {
-    const {history} = this.props
-    console.log(history.isActive("archives"))
+    // console.log('layout props', this.props)
+    const {location} = this.props
+    const containerStyle = {
+      marginTop: "60px"
+    }
+
     return (
       <div>
-        <h1>Layout</h1>
-        {this.props.children}
-        <Link to="archives" activeClassName="btn-danger" class="btn btn-info">archives</Link>
-        <Link to="settings"><button>settings</button></Link>
-        <button onClick={this.navigate.bind(this)}>featured</button>
+
+        {/*Nav*/}
+        <Nav location={location} />
+
+        <div class="container" style={containerStyle}>
+          <div class="row">
+            <div class="col-lg-12">
+
+              {/*body*/}
+              {this.props.children}
+
+            </div>
+
+            {/*Footer*/}
+            <Footer />
+
+          </div>
+        </div>
       </div>
     );
   }
