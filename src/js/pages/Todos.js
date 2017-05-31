@@ -7,8 +7,30 @@ export default class Todos extends React.Component {
     constructor() {
         super()
         this.state = {
-            todos: TodoStore.getAll()
+            todos: TodoStore.getAll(),
+            inputValue: ''
         }
+
+        this.handleAdd = this.handleAdd.bind(this)
+    }
+
+    componentWillMount() {
+        TodoStore.on("change", () => {
+            this.setState({
+                todos: TodoStore.getAll()
+            })
+        })
+    }
+
+    updateInputValue(e) {
+        this.setState({
+            inputValue: e.target.value
+        })
+    }
+
+    handleAdd() {
+        var text = this.state.inputValue        
+        TodoStore.createTodo(text)
     }
 
     render() {
@@ -20,7 +42,8 @@ export default class Todos extends React.Component {
 
         return (
             <div>
-                Todos
+                <input value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)} />
+                <button onClick={this.handleAdd} >Add</button>
                 <ul>{TodoComponents}</ul>
             </div>
         )
