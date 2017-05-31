@@ -2,6 +2,7 @@ import React from 'react'
 
 import Todo from '../components/Todos/Todo'
 import TodoStore from '../stores/TodoStore'
+import dispatcher from '../dispatcher'
 
 export default class Todos extends React.Component {
     constructor() {
@@ -30,7 +31,8 @@ export default class Todos extends React.Component {
 
     handleAdd() {
         var text = this.state.inputValue        
-        TodoStore.createTodo(text)
+        // TodoStore.createTodo(text)
+        dispatcher.dispatch({ type: "CREATE_TODO", text: text })
     }
 
     render() {

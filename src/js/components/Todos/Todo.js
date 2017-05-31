@@ -6,7 +6,10 @@ export default class Todo extends React.Component {
     }
 
     componentWillMount() {
-        console.log('this is a log from each Todo component ', this.props);
+        console.log('Todo componentWillMount: ', this.props);
+    }
+    componentDidMount() {
+        console.log('Todo componentDidMount', this.props);
     }
 
     render() {

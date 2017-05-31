@@ -1,5 +1,7 @@
 import { EventEmitter } from 'events'
 
+import dispatcher from '../dispatcher'
+
 class TodoStore extends EventEmitter {
     constructor() {
         super()
@@ -17,23 +19,33 @@ class TodoStore extends EventEmitter {
         ]
     }
 
-    createTodo(text){
+    createTodo(text) {
         const id = Date.now()
 
         this.todos.push({
             id,
-            text, 
+            text,
             complete: false,
         })
 
         this.emit("change")
     }
 
-    getAll(){
+    getAll() {
         return this.todos
+    }
+
+    handleActions(action) {
+        console.log("TodoStore receieved new action:", action)
+        switch (action.type) {
+            case "CREATE_TODO": {
+                this.createTodo(action.text)
+            }
+        }
     }
 }
 
 const todoStore = new TodoStore
-window.todoStore = todoStore
+dispatcher.register(todoStore.handleActions.bind(todoStore))
+
 export default todoStore
