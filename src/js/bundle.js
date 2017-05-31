@@ -6,6 +6,7 @@ import Layout from "./pages/Layout";
 import Archives from "./pages/Archives";
 import Settings from "./pages/Settings";
 import Featured from "./pages/Featured";
+import Todos from "./pages/Todos";
 
 const app = document.getElementById('app');
 
@@ -15,6 +16,7 @@ ReactDOM.render(
             <IndexRoute component={Featured}></IndexRoute>
             <Route path="archives(/:article)" name="archives" component={Archives}></Route>
             <Route path="settings" name="settings" component={Settings}></Route>
+            <Route path="todos" name="todos" component={Todos}></Route>
         </Route>
     </Router>,
     app);
