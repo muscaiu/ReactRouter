@@ -5,12 +5,12 @@ export default class Todo extends React.Component {
         super()
     }
 
-    componentWillMount() {
-        console.log('Todo componentWillMount: ', this.props);
-    }
-    componentDidMount() {
-        console.log('Todo componentDidMount', this.props);
-    }
+    // componentWillMount() {
+    //     console.log('Todo componentWillMount: ', this.props);
+    // }
+    // componentDidMount() {
+    //     console.log('Todo componentDidMount', this.props);
+    // }
 
     render() {
         const { complete, edit, text } = this.props;

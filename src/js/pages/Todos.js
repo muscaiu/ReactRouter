@@ -1,8 +1,9 @@
 import React from 'react'
+// import dispatcher from '../dispatcher'
 
 import Todo from '../components/Todos/Todo'
+import * as TodoActions from '../actions/TodoActions'
 import TodoStore from '../stores/TodoStore'
-import dispatcher from '../dispatcher'
 
 export default class Todos extends React.Component {
     constructor() {
@@ -12,7 +13,7 @@ export default class Todos extends React.Component {
             inputValue: ''
         }
 
-        this.handleAdd = this.handleAdd.bind(this)
+        // this.handleAdd = this.handleAdd.bind(this)
     }
 
     componentWillMount() {
@@ -29,10 +30,11 @@ export default class Todos extends React.Component {
         })
     }
 
-    handleAdd() {
+    createTodo() {
         var text = this.state.inputValue        
         // TodoStore.createTodo(text)
-        dispatcher.dispatch({ type: "CREATE_TODO", text: text })
+        // dispatcher.dispatch({ type: "CREATE_TODO", text: text })
+        TodoActions.createTodo(text)
     }
 
     render() {
@@ -45,7 +47,7 @@ export default class Todos extends React.Component {
         return (
             <div>
                 <input value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)} />
-                <button onClick={this.handleAdd} >Add</button>
+                <button onClick={this.createTodo.bind(this)} >Add</button>
                 <ul>{TodoComponents}</ul>
             </div>
         )
