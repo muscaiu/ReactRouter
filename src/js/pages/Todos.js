@@ -10,26 +10,29 @@ export default class Todos extends React.Component {
         super()
         this.state = {
             todos: TodoStore.getAll(),
-            inputValue: '', 
+            inputValue: '',
             loading: true
         }
+        this.getTodos = this.getTodos.bind(this)
 
         // this.handleAdd = this.handleAdd.bind(this)
     }
 
     componentWillMount() {
-        TodoStore.on("change", () => {
-            this.setState({
-                todos: TodoStore.getAll()
-            })
-        })
-
+        TodoStore.on("change", this.getTodos)
         console.log("count", TodoStore.listenerCount("change"))
     }
 
-    componentWillUnmount(){
-        
+    componentWillUnmount() {
+        TodoStore.removeListener("change", this.getTodos)
     }
+
+    getTodos() {
+        this.setState({
+            todos: TodoStore.getAll()
+        })
+    }
+
 
     updateInputValue(e) {
         this.setState({
@@ -44,7 +47,7 @@ export default class Todos extends React.Component {
         TodoActions.createTodo(text)
     }
 
-    reloadTodos(){
+    reloadTodos() {
         console.log('reload')
         TodoActions.reloadTodos()
     }
