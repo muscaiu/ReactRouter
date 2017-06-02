@@ -23,6 +23,12 @@ export default class Todos extends React.Component {
                 todos: TodoStore.getAll()
             })
         })
+
+        console.log("count", TodoStore.listenerCount("change"))
+    }
+
+    componentWillUnmount(){
+        
     }
 
     updateInputValue(e) {
