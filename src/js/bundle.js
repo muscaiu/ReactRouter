@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
-import { createStore } from 'redux'
+import { combineReducers, createStore } from 'redux'
 
 import Layout from "./pages/Layout";
 import Archives from "./pages/Archives";
@@ -11,22 +11,32 @@ import Todos from "./pages/Todos";
 
 const app = document.getElementById('app');
 //redux
-const reducer = function (state, action) {
-    if (action.type === 'INC') {
-        return state + action.payload
-    }
-    if (action.type === 'DEC') {
-        return state - action.payload
+const userReducer = (state = { name: 'Dick', age: 25 }, action) => { //default values in {}
+    switch (action.type) {
+        case "CHANGE_NAME": {
+            state = { ...state, name: action.payload }
+            break
+        }
+        case "CHANGE_AGE": {
+            state = { ...state, age: action.payload }
+            break
+        }
     }
     return state
 }
-const store = createStore(reducer, 0)
+const tweetsReducer = (state = [], action) => {//default values in {}
+    return state
+}
+const reducers = combineReducers({
+    user: userReducer,
+    tweets: tweetsReducer
+})
+const store = createStore(reducers)
 store.subscribe(() => {
     console.log('store changed', store.getState())
 })
-store.dispatch({ type: 'INC', payload: 5 })
-store.dispatch({ type: 'INC', payload: 10 })
-store.dispatch({ type: 'DEC', payload: 20 })
+store.dispatch({ type: 'CHANGE_NAME', payload: 'Cris' })
+store.dispatch({ type: 'CHANGE_AGE', payload: 37 })
 
 ReactDOM.render(
     <Router history={hashHistory}>
