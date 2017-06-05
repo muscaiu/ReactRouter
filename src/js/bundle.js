@@ -2,6 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import { applyMiddleware, createStore } from 'redux'
+import createLogger from 'redux-logger'
+import thunk from 'redux-thunk'
+import axios from 'axios'
 
 import Layout from "./pages/Layout";
 import Archives from "./pages/Archives";
@@ -14,37 +17,48 @@ const app = document.getElementById('app');
 
 
 //redux
-const reducer = function (inistalState = 0, action) {
-    if (action.type === 'INC') {
-        return inistalState + action.payload
-    } else if (action.type === 'DEC') {
-        return inistalState - action.payload
-    }else if (action.type === 'ERR'){
-        throw new Error("EOOROROROOR!!!")
+const initialState = {
+    fetching: false,
+    fetched: false,
+    users: [],
+    error: null
+}
+const reducer = (state = initialState, action) => {
+    switch (action.type) {
+        case 'FETCH_USERS_START': {
+            return { ...state, fetching: true }
+            break
+        }
+        case 'FETCH_USERS_ERROR': {
+            return { ...state, fetching: false, error: action.payload }
+            break
+        }
+        case 'RECEIVE_USERS': {
+            return {
+                ...state,
+                fetching: false,
+                fetched: true,
+                users: action.payload
+            }
+            break
+        }
     }
-    return inistalState
+    return state
 }
-const logger = (store) => (next) => (action) => {
-    console.log('action fired', action)
-    action.type = 'DEC'
-    next(action)
-}
-const error = (store) => (next) => (action) => {
-    try {
-        next(action)
-    } catch (e) {
-        console.log(e)
-    }
-}
-const middleware = applyMiddleware(logger, error)
-const store = createStore(reducer, 0, middleware)
-store.subscribe(() => {
-    console.log('store changed', store.getState())
+
+const middleware = applyMiddleware(thunk, createLogger)
+const store = createStore(reducer, middleware)
+
+store.dispatch((dispatch) => {
+    dispatch({ type: 'FETCH_USERS_START' })
+    axios.get('https://jsonplaceholder.typicode.com/users')
+        .then((response) => {
+            dispatch({ type: 'RECEIVE_USERS', payload: response.data })
+        })
+        .catch((err) => {
+            dispatch({ type: "FETCH_USERS_ERROR", payload: err })
+        })
 })
-store.dispatch({ type: 'INC', payload: 5 })
-store.dispatch({ type: 'INC', payload: 10 })
-store.dispatch({ type: 'DEC', payload: 20 })
-store.dispatch({ type: 'ERR' })
 
 
 

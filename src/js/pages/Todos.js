@@ -20,7 +20,7 @@ export default class Todos extends React.Component {
 
     componentWillMount() {
         TodoStore.on("change", this.getTodos)
-        console.log("count", TodoStore.listenerCount("change"))
+        //console.log("count", TodoStore.listenerCount("change"))
     }
 
     componentWillUnmount() {
