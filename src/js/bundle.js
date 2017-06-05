@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
-import { combineReducers, createStore } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
 
 import Layout from "./pages/Layout";
 import Archives from "./pages/Archives";
@@ -10,33 +10,44 @@ import Featured from "./pages/Featured";
 import Todos from "./pages/Todos";
 
 const app = document.getElementById('app');
+
+
+
 //redux
-const userReducer = (state = { name: 'Dick', age: 25 }, action) => { //default values in {}
-    switch (action.type) {
-        case "CHANGE_NAME": {
-            state = { ...state, name: action.payload }
-            break
-        }
-        case "CHANGE_AGE": {
-            state = { ...state, age: action.payload }
-            break
-        }
+const reducer = function (inistalState = 0, action) {
+    if (action.type === 'INC') {
+        return inistalState + action.payload
+    } else if (action.type === 'DEC') {
+        return inistalState - action.payload
+    }else if (action.type === 'ERR'){
+        throw new Error("EOOROROROOR!!!")
     }
-    return state
+    return inistalState
 }
-const tweetsReducer = (state = [], action) => {//default values in {}
-    return state
+const logger = (store) => (next) => (action) => {
+    console.log('action fired', action)
+    action.type = 'DEC'
+    next(action)
 }
-const reducers = combineReducers({
-    user: userReducer,
-    tweets: tweetsReducer
-})
-const store = createStore(reducers)
+const error = (store) => (next) => (action) => {
+    try {
+        next(action)
+    } catch (e) {
+        console.log(e)
+    }
+}
+const middleware = applyMiddleware(logger, error)
+const store = createStore(reducer, 0, middleware)
 store.subscribe(() => {
     console.log('store changed', store.getState())
 })
-store.dispatch({ type: 'CHANGE_NAME', payload: 'Cris' })
-store.dispatch({ type: 'CHANGE_AGE', payload: 37 })
+store.dispatch({ type: 'INC', payload: 5 })
+store.dispatch({ type: 'INC', payload: 10 })
+store.dispatch({ type: 'DEC', payload: 20 })
+store.dispatch({ type: 'ERR' })
+
+
+
 
 ReactDOM.render(
     <Router history={hashHistory}>
